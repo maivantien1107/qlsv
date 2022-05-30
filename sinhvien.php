@@ -72,8 +72,10 @@
 				<label for="txtMaSV">Mã SV:</label>
 				<input type="text" id="txtMaSV" name="txtMaSV" disabled /> <br />
 				
-				<label for="txtHoLot">Họ Tên:</label>
+				<label for="txtHoTen">Họ Tên:</label>
 				<input type="text" id="txtHoTen" name="txtHoTen" /> <br />
+				<label for="txtKiHoc">Họ Tên:</label>
+				<input type="text" id="txtKiHoc" name="txtKiHoc" /> <br />
 				
 				<label for="txtNgaySinh">Ngày Sinh:</label>
 				<input type="text" id="txtNgaySinh" name="txtNgaySinh" /> <br />
@@ -89,8 +91,8 @@
 				  Quê Quán:
 				<textarea id="txtQueQuan" name="txtQueQuan" cols="40" rows="4"></textarea> <br />
 				
-				<label for="txtMatKhau">Mật khẩu:</label>
-				<input type="password" id="txtMatKhau" name="txtMatKhau" /> <br />
+				<label for="txtPassword">Mật khẩu:</label>
+				<input type="password" id="txtPassword" name="txtPassword" /> <br />
 				
 				<label for="txtEmail">Email:</label>				
 				<input type="text" id="txtEmail" name="txtEmail" /> <br />

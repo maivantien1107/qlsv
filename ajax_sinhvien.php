@@ -21,6 +21,7 @@
 			$masv = $_REQUEST["MaSV"];
 			$hoten = $_REQUEST["HoTen"];
 			$ngaysinh = $_REQUEST["NgaySinh"];
+			$kihoc= $_REQUEST["KiHoc"];
 			$gioitinh = $_REQUEST["GioiTinh"];
 			$quequan = $_REQUEST["QueQuan"];
 			$password = md5($_REQUEST["Password"]);
@@ -96,6 +97,7 @@
 					<th>STT</th>
 					<th>MSSV</th>
 					<th>Họ tên</th>
+					<th>Kỳ học</th>
 					<th>Ngày Sinh</th>
 					<th>Quê quán</th>
 					<th>Email</th>
@@ -113,6 +115,7 @@
 					echo "<td class='stt'>" . ++ $i . "</td>";
 					echo "<td>" . $row ["MaSV"] . "</td>";
 					echo "<td>" . $row ["HoTen"] . "</td>";
+					echo "<td>" . $row ["KiHoc"] . "</td>";
 					echo "<td>";
 					$d = strtotime ( $row ["NgaySinh"] );
 					echo date ( "d-m-Y", $d );

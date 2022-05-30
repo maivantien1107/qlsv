@@ -307,8 +307,8 @@ $(document).ready(function(){
 				if (data){
 					 $(dialog).find("#txtMaSV").val(data.MaSV);
 					 $(dialog).find("#txtMaLop").val(data.MaLop);
-					 $(dialog).find("#txtHoLot").val(data.Holot);
-					 $(dialog).find("#txtTen").val(data.Ten);
+					 $(dialog).find("#txtHoTen").val(data.HoTen);
+					 $(dialog).find("#txtKiHoc").val(data.KiHoc);
 					 $(dialog).find("#txtNgaySinh").val(data.NgaySinh);
 					 if (data.GioiTinh == 1){
 						 $("#rdoNam").prop("checked",true);
@@ -318,7 +318,7 @@ $(document).ready(function(){
 					 }
 					 
 					 $(dialog).find("#txtQueQuan").val(data.QueQuan);
-					 $(dialog).find("#txtMatKhau").val(data.MatKhau);
+					 $(dialog).find("#txtPassword").val(data.Password);
 					 $(dialog).find("#txtEmail").val(data.Email);
 					 $(dialog).dialog("open");					 
 				 
@@ -336,15 +336,66 @@ $(document).ready(function(){
 		 event.preventDefault();
 		
 	});
+	//nút sửa môn học
+	$(document).on("click",".btnSuaMH",function(event){
+		var dialog = $("#dialogUpdateMH");
+		
+		var button = $(this);
+		var mamh = $(button).val() ;		 
+		var url = "ajax_monhoc.php";
+		var imgEdit = $(button).html();
+		var param = {"MaMH" : mamh , "Type" : "getInfo"};
+		 
+		$.ajax({
+			url:url,
+			type: "POST",
+			data: param,
+			dataType: "JSON",			
+			error: function(xhr,status,errmgs){
+				var err = "Có lỗi xảy ra khi lấy thông tin môn học " + mamh + " " + errmgs;
+ 				showError(err);
+			},
+			beforeSend: function(){
+				$(button).html("<img id='imgLoading' src='images/more_loading.gif' width='20' height='14'  />");			 
+			},
+			complete: function(){
+				$(button).html(imgEdit);
+			},
+			success: function(data){
+				if (data){
+					 $(dialog).find("#txtMaMH").val(data.MaMH);
+					 $(dialog).find("#txtTenMH").val(data.TenMH);
+					 $(dialog).find("#txtSoTC").val(data.SoTC);
+					 
+
+					 $(dialog).find("#txtKyHoc").val(data.KyHoc);
+					 $(dialog).dialog("open");					 
+				 
+				}else{
+					showError("Môn học không tồn tại.");
+				}
+				
+				 
+				 
+			}
+			
+		});
+		
+		
+		 event.preventDefault();
+		
+	});
 	 
 	 $(document).on("mouseover",".ds tr",function(event){
 		 $(this).find(".btnXoa").show();
 		 $(this).find(".btnSua").show();
+		 $(this).find(".btnSuaMH").show();
 	 });
 	 
-	 $(document).on("mouseout",".ds tr",function(){
+	 $(document).on("mouseout",".ds tr",function(event){
 		 $(this).find(".btnXoa").hide();
 		 $(this).find(".btnSua").hide();
+		 $(this).find(".btnSuaMH").hide();
 	 });
 	  
 	 $( ".group-box" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
@@ -385,28 +436,27 @@ $(document).ready(function(){
 				 	 		$("#btnLuu").hide().before("<span id='spanUpdateLoading'><img src='images/more_loading.gif' width='26' height='18'  />  &nbsp; &nbsp; &nbsp;</span>");
 				 	 		
 				 	 		var masv = $("#txtMaSV").val();
-				 	 		var holot = $("#txtHoLot").val();
-				 	 		var ten = $("#txtTen").val();
+				 	 		var hoten = $("#txtHoTen").val();
 				 	 		var ngaysinh = $("#txtNgaySinh").val();
-				 	 		
+				 	 		var kihoc=$("#txtKiHoc").val();
 				 	 		var gioitinh = 0;
 				 	 		
 				 	 		if ($("#rdoNam").prop("checked")){
 				 	 			gioitinh = 1;
 				 	 		}
 				 	 		var quequan = $("#txtQueQuan").val();
-				 	 		var matkhau = $("#txtMatKhau").val();
+				 	 		var matkhau = $("#txtPassword").val();
 				 	 		var email = $("#txtEmail").val();
 				 	 		
 				 	 		var param = {
 				 	 				Type: "Update",
 				 	 				MaSV : masv,
-				 	 				HoLot: holot,
-				 	 				Ten: ten,
+				 	 				HoTen: hoten,
+									KiHoc: kihoc,
 				 	 				NgaySinh: ngaysinh,
 				 	 				GioiTinh: gioitinh,
 				 	 				QueQuan: quequan,
-				 	 				MatKhau: matkhau,
+				 	 				Password: matkhau,
 				 	 				Email: email
 				 	 		};
 				 	 		var url = "ajax_sinhvien.php";
@@ -451,6 +501,78 @@ $(document).ready(function(){
 			 	  }
 		 	  ]
    });
+   $("#dialogUpdateMH").dialog({
+	autoOpen:false,
+	closeOnEscape: true,
+	closeText: "Đóng",
+	resizable: false,
+	title: "Cập nhật thông tin",
+	show: {effect: "drop", duration: 200, direction: "up"},
+	hide: "slide",
+	modal: true,
+	width: 550,
+	height: 600,
+	buttons: [
+				 {
+					text:"Lưu",
+					id: "btnLuu",
+					click: function(){
+						   $("#btnLuu").hide().before("<span id='spanUpdateLoading'><img src='images/more_loading.gif' width='26' height='18'  />  &nbsp; &nbsp; &nbsp;</span>");
+						   
+						   var mamh = $("#txtMaMH").val();
+						   var tenmh = $("#txtTenMH").val();
+						   var sotc = $("#txtSoTC").val();
+						   var kyhoc = $("#txtKyHoc").val();
+						   
+						   var param = {
+								   Type: "Update",
+								   MaMH : mamh,
+								   TenMH: tenmh,
+								   SoTC: sotc,
+								   KyHoc: kyhoc
+						   };
+						   var url = "ajax_monhoc.php";
+						   
+						   $.ajax({
+							 url:url,
+							 type: "POST",
+							 data: param,
+							 dataType: "HTML",			
+							 error: function(xhr,status,errmgs){
+								 var err = "Có lỗi xảy ra: " + errmgs;
+								 $(this).dialog("close");
+								 showError(err);									 							
+							 },							 
+							 complete: function(){
+								 $("#spanUpdateLoading").remove();
+								 $("#btnLuu").show();
+								 
+							 },
+							 beforeSend: function(){ 
+							 },
+							 success: function(data){
+								 if (data == "OK"){	
+									 reLoad();
+									 $("#dialogUpdateMH").dialog("close");										
+									 
+								 }else{
+									 var err = "Không thể cập nhật môn học " + mamh;
+									 showError(err);
+								 }
+							 }
+							 
+						 });
+						
+					   }
+				 },
+				{
+					text:"Đóng",					 	 	 
+					   click: function(){
+						   $(this).dialog("close");
+					   }
+				}
+			]
+});
    
    $("#txtNgaySinh").datepicker({
 	   dateFormat: "yy-mm-dd",

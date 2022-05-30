@@ -47,7 +47,138 @@
 								$("#divDSMH").html(data);
 							})
 						})
-					})
+					});
+					//nút sửa môn học
+	$(document).on("click",".btnSuaMH",function(event){
+		var dialog = $("#dialogUpdateMH");
+		
+		var button = $(this);
+		var mamh = $(button).val() ;		 
+		var url = "ajax_monhoc.php";
+		var imgEdit = $(button).html();
+		var param = {"MaMH" : mamh , "Type" : "getInfo"};
+		 
+		$.ajax({
+			url:url,
+			type: "POST",
+			data: param,
+			dataType: "JSON",			
+			error: function(xhr,status,errmgs){
+				var err = "Có lỗi xảy ra khi lấy thông tin môn học " + mamh + " " + errmgs;
+ 				showError(err);
+			},
+			beforeSend: function(){
+				$(button).html("<img id='imgLoading' src='images/more_loading.gif' width='20' height='14'  />");			 
+			},
+			complete: function(){
+				$(button).html(imgEdit);
+			},
+			success: function(data){
+				if (data){
+					 $(dialog).find("#txtMaMH").val(data.MaMH);
+					 $(dialog).find("#txtTenMH").val(data.TenMH);
+					 $(dialog).find("#txtSoTC").val(data.SoTC);
+					 
+
+					 $(dialog).find("#txtKyHoc").val(data.KyHoc);
+					 $(dialog).dialog("open");					 
+				 
+				}else{
+					showError("Môn học không tồn tại.");
+				}
+				
+				 
+				 
+			}
+			
+		});
+		$("#dialogUpdateMH").dialog({
+	autoOpen:false,
+	closeOnEscape: true,
+	closeText: "Đóng",
+	resizable: false,
+	title: "Cập nhật thông tin",
+	show: {effect: "drop", duration: 200, direction: "up"},
+	hide: "slide",
+	modal: true,
+	width: 550,
+	height: 600,
+	buttons: [
+				 {
+					text:"Lưu",
+					id: "btnLuu",
+					click: function(){
+						   $("#btnLuu").hide().before("<span id='spanUpdateLoading'><img src='images/more_loading.gif' width='26' height='18'  />  &nbsp; &nbsp; &nbsp;</span>");
+						   
+						   var mamh = $("#txtMaMH").val();
+						   var tenmh = $("#txtTenMH").val();
+						   var sotc = $("#txtSoTC").val();
+						   var kyhoc = $("#txtKyHoc").val();
+						   
+						   var param = {
+								   Type: "Update",
+								   MaMH : mamh,
+								   TenMH: tenmh,
+								   SoTC: sotc,
+								   KyHoc: kyhoc
+						   };
+						   var url = "ajax_monhoc.php";
+						   
+						   $.ajax({
+							 url:url,
+							 type: "POST",
+							 data: param,
+							 dataType: "HTML",			
+							 error: function(xhr,status,errmgs){
+								 var err = "Có lỗi xảy ra: " + errmgs;
+								 $(this).dialog("close");
+								 showError(err);									 							
+							 },							 
+							 complete: function(){
+								 $("#spanUpdateLoading").remove();
+								 $("#btnLuu").show();
+								 
+							 },
+							 beforeSend: function(){ 
+							 },
+							 success: function(data){
+								 if (data == "OK"){	
+									 reLoad();
+									 $("#dialogUpdateMH").dialog("close");										
+									 
+								 }else{
+									 var err = "Không thể cập nhật môn học " + mamh;
+									 showError(err);
+								 }
+							 }
+							 
+						 });
+						
+					   }
+				 },
+				{
+					text:"Đóng",					 	 	 
+					   click: function(){
+						   $(this).dialog("close");
+					   }
+				}
+			]
+});
+   
+		
+		 event.preventDefault();
+		
+	});
+	$(document).on("mouseover",".ds tr",function(event){
+		 
+		 $(this).find(".btnSuaMH").show();
+	 });
+	 
+	 $(document).on("mouseout",".ds tr",function(event){
+		 
+		 $(this).find(".btnSuaMH").hide();
+	 });
+
 				</script>						
 			</select> &nbsp;&nbsp;		 
 			<span id="divImgMH" ></span>
@@ -73,37 +204,20 @@
 		</form>
 		
 		
-		<div id="dialogUpdateSV">
+		<div id="dialogUpdateMH">
 				<p id="info"></p>
 				
-				<label for="txtMaLop">Mã Lớp:</label>
-				<input type="text" id="txtMaLop" name="txtMaLop" disabled /> <br />
+				<label for="txtMaMH">Mã môn học:</label>
+				<input type="text" id="txtMaMH" name="txtMaMH" disabled /> <br />
 				
-				<label for="txtMaSV">Mã SV:</label>
-				<input type="text" id="txtMaSV" name="txtMaSV" disabled /> <br />
+				<label for="txtTenMH">Tên môn học:</label>
+				<input type="text" id="txtTenMH" name="txtTenMH" disabled /> <br />
 				
-				<label for="txtHoLot">Họ Tên:</label>
-				<input type="text" id="txtHoTen" name="txtHoTen" /> <br />
+				<label for="txtSoTC">Số tín chỉ:</label>
+				<input type="text" id="txtSoTC" name="txtSoTC" /> <br />
 				
-				<label for="txtNgaySinh">Ngày Sinh:</label>
-				<input type="text" id="txtNgaySinh" name="txtNgaySinh" /> <br />
-				
-				<label for="rdoGioiTinh">Giới tính:</label>
-				 
-				<input type="radio" id="rdoNam" name="rdoGioiTinh[]" value="1" checked />
-					<span>Nam</span>
-				<input type="radio" id="rdoNu" name="rdoGioiTinh[]" value="0" /> 
-					<span>Nữ</span>
-				<p></p>  								   
-				  
-				  Quê Quán:
-				<textarea id="txtQueQuan" name="txtQueQuan" cols="40" rows="4"></textarea> <br />
-				
-				<label for="txtMatKhau">Mật khẩu:</label>
-				<input type="password" id="txtMatKhau" name="txtMatKhau" /> <br />
-				
-				<label for="txtEmail">Email:</label>				
-				<input type="text" id="txtEmail" name="txtEmail" /> <br />
+				<label for="txtKiHoc">Kỳ học dự kiến:</label>
+				<input type="text" id="txtKiHoc" name="txtKiHoc" /> <br />
 				
 			</div>
 	 <p> </p>
