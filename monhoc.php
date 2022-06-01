@@ -45,9 +45,98 @@
 							idtruong=$("#DSTruong").val();
 							$.post('ajax_monhoc.php',{"idtruong":idtruong},function(data){
 								$("#divDSMH").html(data);
+								$(".btnXoa, .btnSuaMH").hide();
 							})
 						})
 					});
+	// xử lý nút xóa
+	$(document).on("click",".btnXoaMH",function(event){
+		 var button = $(this);
+		 var masv = $(button).val() ;
+		 
+		 var x = "Có chắc bạn muốn xóa " + mamh + " không?";
+		 var dialog = $("#delDialogMH");
+		 $(dialog).find("p").text(x);
+		 
+		 $(dialog).dialog({
+			 closeOnEscape: true,
+			 closeText: "Đóng",
+			 resizable: false,
+			 title: "Xác nhận",
+			 show: {effect: "drop", duration: 200, direction: "up"},
+		 	 hide: "slide",
+		 	 modal: true,
+		 	 buttons: [
+				{
+				 	html:"<span class='ui-icon ui-icon-trash'></span>",
+				 	title: "Xóa",
+				 	click: function(){
+				 		$(dialog).dialog("close");	
+				 		var url = "ajax_monhoc.php";							 			
+						var param = {"MaMH":mamh};		
+						$.ajax({
+							url:url,
+							type: "POST",
+							data: param,
+							dataType: "HTML",			
+							error: function(xhr,status,errmgs){
+								var err = "Có lỗi xảy ra: " + errmgs;
+								showError(err);
+								$(dialog).dialog("close");								
+							},							 
+							complete: function(){
+								
+							},
+							success: function(data){
+								if (data == "OK"){						 
+									 $(button).parent().parent().remove();
+									 $(".stt").each(function(index){
+										 $(this).text(index + 1);
+									 });
+								}else{
+									var err = "Không thể xóa môn học " + mamh;
+									showError(err);
+								}
+							}
+							
+						});
+							
+					}
+				},
+		 		{
+			 	 	html:"<span class='ui-icon ui-icon-cancel'></span>",
+			 	 	title: "Hủy",
+			 	 	id: "btnClose",
+			 	 	click: function(){
+						$(this).dialog("close");
+				 	}
+				}
+			]
+			 
+		 });
+		 event.preventDefault(); 
+	 });
+	 
+		function showError(err){
+			$("#errDialogMH").find("p").text(err);
+			$("#errDialogMH").dialog({
+				closeOnEscape: true,
+				 closeText: "Đóng",
+				 resizable: false,
+				 
+				 title: "Thông báo lỗi",
+				 show: {effect: "drop", duration: 200, direction: "up"},
+			 	 hide: "bounce",
+			 	 buttons: [
+			 	       {
+			 	    	  text:"Đóng",					 	 	 
+					 	 	click: function(){
+								$(this).dialog("close");
+						 	}
+			 	       }    
+			 	  ]
+			});
+		}
 					//nút sửa môn học
 	$(document).on("click",".btnSuaMH",function(event){
 		var dialog = $("#dialogUpdateMH");
@@ -78,7 +167,6 @@
 					 $(dialog).find("#txtMaMH").val(data.MaMH);
 					 $(dialog).find("#txtTenMH").val(data.TenMH);
 					 $(dialog).find("#txtSoTC").val(data.SoTC);
-					 
 
 					 $(dialog).find("#txtKyHoc").val(data.KyHoc);
 					 $(dialog).dialog("open");					 
@@ -170,14 +258,31 @@
 		
 	});
 	$(document).on("mouseover",".ds tr",function(event){
-		 
+		$(this).find(".btnXoaMH").show();
 		 $(this).find(".btnSuaMH").show();
 	 });
 	 
 	 $(document).on("mouseout",".ds tr",function(event){
-		 
+		$(this).find(".btnXoaMH").hide();
 		 $(this).find(".btnSuaMH").hide();
 	 });
+	 $( ".group-box" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+     	.find( ".title" ).addClass( "ui-widget-header ui-corner-all" )
+     	.prepend( "<span class='ui-icon ui-icon-triangle-1-s'></span>");
+
+   $( ".group-box .ui-icon" ).click(function() {
+     $( this ).toggleClass( "ui-icon-triangle-1-s" )
+     	.toggleClass( "ui-icon-triangle-1-w" );
+     $( this ).parents(".group-box").find( ".group-box-content" )
+     	.slideToggle();
+   });
+   
+   $("#leftSide").sortable({
+	   axis: "y",
+	   revert: 500,
+	   handle:".title",
+	   curosr: "move"
+   }).disableSelection();
 
 				</script>						
 			</select> &nbsp;&nbsp;		 
@@ -211,7 +316,7 @@
 				<input type="text" id="txtMaMH" name="txtMaMH" disabled /> <br />
 				
 				<label for="txtTenMH">Tên môn học:</label>
-				<input type="text" id="txtTenMH" name="txtTenMH" disabled /> <br />
+				<input type="text" id="txtTenMH" name="txtTenMH" /> <br />
 				
 				<label for="txtSoTC">Số tín chỉ:</label>
 				<input type="text" id="txtSoTC" name="txtSoTC" /> <br />

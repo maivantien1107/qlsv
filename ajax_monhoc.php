@@ -111,7 +111,7 @@ if ($result && $result->num_rows>0){
                 echo "<td>" . $row ["KyHoc"] . "</td>";
                 echo "<td>";
                 echo "<button  class='btnSuaMH' name='MaMH' value='" . $row ["MaMH"] . "'><span class='ui-icon ui-icon-pencil' ></span></button>";
-                echo "<button name='btnXoa' class='btnXoa' value='" . $row ["MaMH"] . "' ><span class='ui-icon ui-icon-trash'  ></span> </button>";
+                echo "<button name='btnXoaMH' class='btnXoaMH' value='" . $row ["MaMH"] . "' ><span class='ui-icon ui-icon-trash'  ></span> </button>";
                 echo "</td>";
                 echo "</tr>";
             }

@@ -74,8 +74,8 @@
 				
 				<label for="txtHoTen">Họ Tên:</label>
 				<input type="text" id="txtHoTen" name="txtHoTen" /> <br />
-				<label for="txtKiHoc">Họ Tên:</label>
-				<input type="text" id="txtKiHoc" name="txtKiHoc" /> <br />
+				<label for="txtKiHoc">Kì Học:</label>
+				<input type="text" id="txtKiHoc" name="txtKiHoc"  /> <br />
 				
 				<label for="txtNgaySinh">Ngày Sinh:</label>
 				<input type="text" id="txtNgaySinh" name="txtNgaySinh" /> <br />
