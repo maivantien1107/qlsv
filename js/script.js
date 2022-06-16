@@ -1,6 +1,6 @@
 
 // ############ jQuery  ############
-
+$.noConflict();
 $(document).ready(function(){
 	
 // logout	
@@ -61,14 +61,14 @@ $(document).ready(function(){
 			});
 		});
 		// xử lysc họn trường in danh sách môn học
-		jQuery(document).ready(function($){
-			$("#DSTruong").change(function(event){
-				idtruong=$("#DSTruong").val();
-				$.post('ajax_monhoc.php',{"idtruong":idtruong},function(data){
-					$("#divDSMH").html(data);
-				})
-			})
-		})
+		// jQuery(document).ready(function($){
+		// 	$("#DSTruong").change(function(event){
+		// 		idtruong=$("#DSTruong").val();
+		// 		$.post('ajax_monhoc.php',{"idtruong":idtruong},function(data){
+		// 			$("#divDSMH").html(data);
+		// 		})
+		// 	})
+		// });
 		// $("#DSTruong").change(function(){
 		// 	var urltrg="D:/Xampp/htdocs/qlsv/ajax_monhoc.php"
 		// 	var matruong=$("#DSTruong").val();
@@ -409,12 +409,12 @@ $(document).ready(function(){
      	.slideToggle();
    });
    
-   $("#leftSide").sortable({
-	   axis: "y",
-	   revert: 500,
-	   handle:".title",
-	   curosr: "move"
-   }).disableSelection();
+//    $("#leftSide").sortable({
+// 	   axis: "y",
+// 	   revert: 500,
+// 	   handle:".title",
+// 	   curosr: "move"
+//    }).disableSelection();
    
    
    $("#dialogUpdateSV").dialog({
