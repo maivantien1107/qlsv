@@ -407,5 +407,13 @@ div.success  {
 	height: 16px;
 }
  
-
+.footer_table li{
+	float:left; margin: 3px; border: solid 1px gray; list-style: none;
+}
+.footer_table a{
+	padding: 5px;
+}
+.footer_table span{
+	display:inline-block; padding: 0px 3px; background: black; color:white;
+}
 

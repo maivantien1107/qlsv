@@ -10,7 +10,8 @@ $page_description = 'Hệ thống Quản lý đào tạo ';
 
 
  require_once("./libs/db.php"); 
- require_once("./libs/common.php"); 
+ require_once("./libs/common.php");
+ require_once("./validatefrom/pagination.php"); 
 
 define('ROOT_DIR', "");
  

@@ -18,10 +18,24 @@
 	<meta name="description" content="<?php echo $page_description; ?>" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />	
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" 	href="css/ui-lightness/jquery-ui-1.10.2.custom.css" />
+	<script language="javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.10.2.custom.js"></script>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.10.2.custom.js"></script>
-	<link rel="stylesheet" 	href="css/ui-lightness/jquery-ui-1.10.2.custom.css" />
+	<style>
+		.footer_table li{
+	float:left; margin: 3px; border: solid 1px gray; list-style: none;
+}
+.footer_table a{
+	padding: 5px;
+}
+.footer_table span{
+	display:inline-block; padding: 0px 3px; background: black; color:white;
+}
+	</style>
+	
+   
 <!-- 	<link rel="stylesheet" 	href="css/jmetro/jquery-ui-1.10.2.custom.css" /> -->
     
 </head>
@@ -66,7 +80,7 @@
 								<li> <a href="nganh.php">Ngành Đào Tạo</a> </li>
 								<li> <a href="lopchuyennganh.php">Lớp Chuyên Ngành</a> </li>
 								<li> <a href="lophocphan.php">Lớp Học Phần</a> </li>
-								<li> <a href="monhoc.php">Môn Học</a> </li>
+								<li> <a href="monhoc1.php">Môn Học</a> </li>
 							</ul>						
 						</div>						
 				</div>

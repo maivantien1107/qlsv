@@ -1,4 +1,6 @@
-<?php require "header.php"; ?>
+<?php require "header.php"; 
+
+?>
 
 <div class="group-box">
 	<div align="center">
@@ -40,16 +42,108 @@
 				$result->free();
 				?>
 				<script>
-					// jQuery(document).ready(function($){
-					// 	$("#DSTruong").change(function(event){
-					// 		idtruong=$("#DSTruong").val();
-					// 		$.post('ajax_monhoc.php',{"idtruong":idtruong},function(data){
-					// 			$("#divDSMH").html(data);
-					// 			$(".btnXoa, .btnSuaMH").hide();
-					// 		})
-					// 	})
-					// });
+					jQuery(document).ready(function($){
+						$("#DSTruong").change(function(event){
+							idtruong=$("#DSTruong").val();
+							$.post('ajax_monhoc.php',{"idtruong":idtruong},function(data){
+								$("#divDSMH").html(data);
+								$(".btnXoa, .btnSuaMH").hide();
+							})
+						})
+					});
+    // xử lý load thêm danh sách môn học
+	$(window).scroll(function(){		 
+		 loadMore();
+		
+	 });
+	 
+	 function loadMore(){
+		 var lastPos = 0;
+		 var isLoaded = false;
+		 
+		 try{
+			 lastPos = $("#btnLast").offset().top ;
+			 isLoaded = true;
+			 
+		 }catch(e){
+			 isLoaded = false; 
+		 }
+		 
+		 var finish = 0;
+		 try{
+			 finish = parseInt($("#btnLast").data("finish"));
+		 }catch(e){
+			 finish = 0;
+		 }
+		 		 
+		 var top = ( $(window).scrollTop()  +  $(window).height());
+		 
+		 
+		 if  ( isLoaded && top >= lastPos && !finish){
+		 
+		 	var url = "ajax_monhoc.php";
+			var matrg = $("#svDSMH").val();			 
+			var last = $("#btnLast").val().toString();	
+			
+			var param = {"MaTruong" : matrg , "Last" : last};
+			 
+			$.ajax({
+				url:url,
+				type: "POST",
+				data: param,
+				dataType: "HTML",			
+				error: function(xhr,status,errmgs){
+					$("#divDSMH").html("<div class='error'>Có lỗi xảy ra: " + errmgs + "</div>");
+				},
+				beforeSend: function(){
+					$("#divThemImgMH").html("<img id='imgLoading' src='images/more_loading.gif' width='22' height='22'  />");
+				},
+				complete: function(){
+					//$("#divThemImg").html(divInnerHTML);
+				},
+				success: function(data){
+					$("#divDSMH").html(data);
+					$(".btnXoaMH, .btnSuaMH").hide();
+				}
+				
+			});
+		 }
+		 
+	 }
+	 
+	 
+	 function reLoad(){
+		 
+		 	var url = "ajax_monhoc.php";
+			var matrg = $("#svDSMH").val();			 
+			var last = $("#btnLast").val().toString();	
+			
+			var param = {"MaTruong" : matrg , "Last" : last};
+			 
+			$.ajax({
+				url:url,
+				type: "POST",
+				data: param,
+				dataType: "HTML",			
+				error: function(xhr,status,errmgs){
+					$("#divDSMH").html("<div class='error'>Có lỗi xảy ra: " + errmgs + "</div>");
+				},
+				beforeSend: function(){
+					$("#divThemImgMH").html("<img id='imgLoading' src='images/more_loading.gif' width='22' height='22'  />");
+				},
+				complete: function(){
+					//$("#divThemImg").html(divInnerHTML);
+				},
+				success: function(data){
+					$("#divDSMH").html(data);
+					$(".btnXoaMH, .btnSuaMH").hide();
+				}
+				
+			});
+		  
+	 }
 	// xử lý nút xóa
+
 	$(document).on("click",".btnXoaMH",function(event){
 		 var button = $(this);
 		 var masv = $(button).val() ;
@@ -283,65 +377,71 @@
 	   handle:".title",
 	   curosr: "move"
    }).disableSelection();
-             $('.ds').on('click','#paging a', function ()
-             {
-                 var url = $(this).attr('href');
+   //phân trang
+//    $('ds').on('click','#paging a', function ()
+//              {
+//                  var url = $(this).attr('href');
+// 				 console.log(url);
+			
                   
-                 $.ajax({
-                     url : url,
-                     type : 'get',
-                     dataType : 'json',
-                     success : function (result)
-                     {
-                         //  kiểm tra kết quả đúng định dạng không
-                         if (result.hasOwnProperty('member') && result.hasOwnProperty('paging'))
-                         {
-                             var html = '';
-                             // lặp qua danh sách thành viên và tạo html
-                             $.each(result['member'], function (key, item){
-                               html+='<thead>';
-            html+='<tr class="ui-widget-header">';
-               html+=' <th><input type="checkbox" id="checkAll"/></th>';
-               html+= '<th>STT</th>';
-               html+= '<th>Mã môn học</th>';
-                html+='<th>Tên môn học</th>';
-               html+= '<th>Số tín chỉ</th>;'
-                html+='<th>Kì học dự kiến</th>';
-               html+= '<th></th>';
-            html+='</tr>';
-        html+='</thead>';
-        html+='<tbody>';
-                html+= "<tr class='trsv' >";
-                html+= "<td><input name='chkmasv[]'  value='" + item ["MaMH"] +"' class='chkmasv' type='checkbox'/> </td>";
-                html+= "<td class='stt'>"+1+ "</td>";
-                html+= "<td>" + item ["MaMH"] + "</td>";
-                html+= "<td>" + item ["TenMH"] + "</td>";
-                html+= "<td>" + item["SoTC"] + "</td>";
-                html+= "<td>" + item["KyHoc"] + "</td>";
-                html+= "<td>";
-                html+= "<button  class='btnSuaMH' name='MaMH' value='" + item["MaMH"] + "'><span class='ui-icon ui-icon-pencil' ></span></button>";
-                html+= "<button name='btnXoaMH' class='btnXoaMH' value='" + item["MaMH"] + "' ><span class='ui-icon ui-icon-trash'  ></span> </button>";
-                html+= "</td>";
-                html+= "</tr>";
-        html+='</tbody>';
-                             });
+//                  $.ajax({
+//                      url : url,
+//                      type : 'get',
+//                      dataType : 'html',
+//                      success : function (result)
+//                      {
+//                          //  kiểm tra kết quả đúng định dạng không
+//                          if (result.hasOwnProperty('member') && result.hasOwnProperty('paging'))
+//                          {
+//                              var html = '<table class="ds">'
+// 							 +'<!-- in tiêu đề danh sách -->'+
+// 								+'<thead>'
+// 									+ '<tr class="ui-widget-header">'
+// 									+  '  <th><input type="checkbox" id="checkAll"/></th>'
+// 									+  '  <th>STT</th>'
+// 									+  '  <th>Mã môn học</th>'
+// 									+  '  <th>Tên môn học</th>'
+// 									+  '  <th>Số tín chỉ</th>'
+// 									+  '  <th>Kì học dự kiến</th>'
+// 									+  '  <th></th>'
+// 								+  '  </tr>'
+// 							+  '</thead>'
+// 							+  '  <!-- end in tiêu đề-->'
+// 							+  '  <!-- inh danh dánh -->'
+// 							+  '  <tbody>';
+//                              // lặp qua danh sách thành viên và tạo html
+// 							 var i=0;
+//                              $.each(result['member'], function (key, item){
+// 							    html+= "<tr class='trsv' >";
+// 								html+= "<td><input name='chkmasv[]'  value='"+item['MaMH']+ "' class='chkmasv' type='checkbox'/> </td>";
+// 								html+= "<td class='stt'>" + (++i) + "</td>";
+// 								html+= "<td>"+item['MaMH']+ "</td>";
+// 								html+= "<td>" +item['TenMH']+ "</td>";
+// 								html+= "<td>"+item['SoTC'] +"</td>";
+// 								html+= "<td>" +item['KyHoc']+ "</td>";
+// 								html+= "<td>";
+// 								html+= "<button  class='btnSuaMH' name='MaMH' value='"+item['MaMH']+ "'><span class='ui-icon ui-icon-pencil' ></span></button>";
+// 								html+= "<button name='btnXoaMH' class='btnXoaMH' value='"+item['MaMH'] +"' ><span class='ui-icon ui-icon-trash'  ></span> </button>";
+// 								html+= "</td>";
+// 								html+= "</tr>";
+//                              });                          
+//                              html += '</tbody>';
+// 							 html+='</table>';
                               
-                             html += '</table>';
+//                              // Thay đổi nội dung danh sách thành viên
+//                              $('#divDSMH').html(html);
                               
-                             // Thay đổi nội dung danh sách thành viên
-                             $('#list_mh').html(html);
+//                              // Thay đổi nội dung phân trang
+//                              $('#paging').html(result['paging']);
                               
-                             // Thay đổi nội dung phân trang
-                             $('#paging').html(result['paging']);
-                              
-                             // Thay đổi URL trên website
-                             window.history.pushState({path:url},'',url);
-                         }
-                     }
-                 });
-                 return false;
-             });
-        
+//                              // Thay đổi URL trên website
+//                              window.history.pushState({path:url},'',url);
+//                          }
+//                      }
+//                  });
+//                  return false;
+//              });
+
 				</script>						
 			</select> &nbsp;&nbsp;		 
 			<span id="divImgMH" ></span>
@@ -349,7 +449,7 @@
 			<hr>
 			 
 			<div id="divDSMH" ></div>
-			<div id="paging"></div>
+			
 			<div id="delDialogMH">
 				<p> </p>
 			</div>
